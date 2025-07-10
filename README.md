@@ -80,11 +80,22 @@ Each node stores a character and tracks whether it ends a word.
 🔄 Scalable: Easily extendable with APIs, multilingual support, analytics.
 
 ## 🚀 Getting Started
-1.Clone Repository:
+
+Follow these steps to set up and run the Voice Search System on your local machine:
+
+---
+
+### 1. 🔁 Clone the Repository
+
 git clone https://github.com/your-username/voice_search_system.git
 cd voice_search_system
-2.Install Dependencies:
+
+### 2. 📦 Install Dependencies
+
 pip install -r requirements.txt
-3.Run App (Console Mode):
+
+### 3. ▶️ Run the Application (Console Mode)
+
 python app.py
+
 
