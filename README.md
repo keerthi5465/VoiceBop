@@ -49,6 +49,8 @@ Each node stores a character and tracks whether it ends a word.
 - `starts_with(prefix)`: Supports autocomplete.
 - `fuzzy_match(word)`: Suggests corrections (optional).
 
+---
+
 ## 🧰 Tech Stack
 
 | Component       | Technology                                   |
@@ -60,6 +62,7 @@ Each node stores a character and tracks whether it ends a word.
 | APIs (optional) | Google Custom Search                         |
 | Dev Tools       | VS Code, PyCharm, Git, GitHub                |
 
+---
 
 ## ✅ Challenges & Solutions
 | Challenge              | Solution                                  |
@@ -68,6 +71,8 @@ Each node stores a character and tracks whether it ends a word.
 | Trie memory usage      | Limit commands, compress Trie if needed   |
 | Integration complexity | Use modular code and thorough testing     |
 | Demo reliability       | Include text input fallback for testing   |
+
+---
 
 
 ## 📈 Why This Project?
@@ -78,6 +83,8 @@ Each node stores a character and tracks whether it ends a word.
 🎨 Engaging Demo: Interactive and voice-controlled interface.
 
 🔄 Scalable: Easily extendable with APIs, multilingual support, analytics.
+
+---
 
 ## 🚀 Getting Started
 
