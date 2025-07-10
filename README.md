@@ -83,7 +83,6 @@ Each node stores a character and tracks whether it ends a word.
 
 Follow these steps to set up and run the Voice Search System on your local machine:
 
----
 
 ### 1. 🔁 Clone the Repository
 
