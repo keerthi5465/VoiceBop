@@ -68,7 +68,7 @@ Follow these steps to set up and run the Voice Search System on your local machi
 
 ### 1. 🔁 Clone the Repository
  
-git clone https://github.com/your-username/voice_search_system.git
+git clone  https://github.com/keerthi5465/VoiceBop
 
 cd voice_search_system
 
