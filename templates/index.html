@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voice Search System</title>
+</head>
+<body>
+    <h1>Voice Search System</h1>
+    <button onclick="startRecording()">Start Voice Input</button>
+    <p id="result"></p>
+    <script>
+        function startRecording() {
+            fetch('/voice', {method: 'POST'})
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerText = data.result;
+                });
+        }
+    </script>
+</body>
+</html>
