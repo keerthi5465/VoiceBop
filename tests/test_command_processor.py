@@ -17,5 +17,6 @@ class TestCommandProcessor(unittest.TestCase):
     def test_unrecognized(self):
         self.assertEqual(self.processor.process("xyz"), "Command not recognized.")
 
-if _name_ == "_main_":
+
+if __name__ == "__main__":
     unittest.main()
