@@ -1,21 +1,30 @@
-import unittest
-from command_processor import CommandProcessor
+from trie import Trie
 
-class TestCommandProcessor(unittest.TestCase):
-    def setUp(self):
-        self.processor = CommandProcessor(["play", "pause", "search", "stop"])
+class CommandProcessor:
+    def __init__(self, commands=None):
+        """
+        commands: dict of {command_text: response_text}
+        """
+        self.commands = commands or {}
+        self.trie = Trie()
+        for cmd in self.commands.keys():
+            self.trie.insert(cmd)
 
-    def test_exact_command(self):
-        self.assertEqual(self.processor.process("play"), "Playing...")
+    def process(self, command: str) -> str:
+        command = command.lower().strip()
 
-    def test_autocomplete(self):
-        self.assertIn("Did you mean", self.processor.process("pl"))
+        # Exact match
+        if self.trie.search(command):
+            return self.commands.get(command, f"Executing {command}...")
 
-    def test_fuzzy(self):
-        self.assertIn("Did you mean", self.processor.process("plai"))
+        # Autocomplete suggestions
+        suggestions = self.trie.starts_with(command)
+        if suggestions:
+            return f"Did you mean: {', '.join(suggestions)}?"
 
-    def test_unrecognized(self):
-        self.assertEqual(self.processor.process("xyz"), "Command not recognized.")
+        # Fuzzy search suggestions
+        fuzzy_suggestions = self.trie.fuzzy_search(command, max_distance=1)
+        if fuzzy_suggestions:
+            return f"Did you mean: {', '.join(fuzzy_suggestions)}?"
 
-if __name__ == "__main__":
-    unittest.main()
+        return "Command not recognized."
