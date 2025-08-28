@@ -1,3 +1,4 @@
-speechrecognition
+SpeechRecognition
 pyttsx3
-flask
+Flask
+pyaudio    
