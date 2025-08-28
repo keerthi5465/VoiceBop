@@ -1,17 +1,10 @@
 import pyttsx3
 
-# Initialize engine once
-engine = pyttsx3.init()
-
-def speak(text: str):
+def speak(text):
     """
-    Converts text to speech using pyttsx3.
+    Speak the given text using pyttsx3.
     """
+    engine = pyttsx3.init()
     engine.say(text)
     engine.runAndWait()
-
-
-# ---------------- Test / Demo ----------------
-if __name__ == "__main__":
-    speak("Hello! This is your voice assistant speaking.")
-    speak("You can integrate this with your command processor.")
+    engine.stop()

@@ -1,53 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Voice Search System</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-        #result {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #333;
-        }
-        #status {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #666;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Voice Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Voice Search System</h1>
-    <button onclick="startRecording()">Start Voice Input</button>
-    <p id="status"></p>
-    <p id="result"></p>
+  <div class="container">
+    <h1>🎙️ Voice Assistant</h1>
+    <p>Click the button and speak a command.</p>
 
-    <script>
-        function startRecording() {
-            const statusEl = document.getElementById('status');
-            const resultEl = document.getElementById('result');
-            statusEl.innerText = "Listening...";
-            resultEl.innerText = "";
+    <!-- Mic Button -->
+    <button id="micBtn">🎤 Start Speaking</button>
 
-            fetch('/voice', { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    statusEl.innerText = "Done!";
-                    resultEl.innerText = data.result;
-                })
-                .catch(err => {
-                    statusEl.innerText = "Error during voice processing.";
-                    console.error(err);
-                });
-        }
-    </script>
+    <!-- Output -->
+    <div id="output">
+      <p><strong>Command:</strong> <span id="commandText">None</span></p>
+      <p><strong>Response:</strong> <span id="responseText">None</span></p>
+    </div>
+
+    <!-- History -->
+    <div id="history">
+      <h2>📝 History</h2>
+      <ul id="historyList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const micBtn = document.getElementById("micBtn");
+    const commandText = document.getElementById("commandText");
+    const responseText = document.getElementById("responseText");
+    const historyList = document.getElementById("historyList");
+
+    let recognizing = false;
+    let recognition;
+
+    if ("webkitSpeechRecognition" in window) {
+      recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = "en-US";
+
+      recognition.onstart = () => {
+        recognizing = true;
+        micBtn.textContent = "🎤 Listening...";
+      };
+
+      recognition.onresult = async (event) => {
+        const transcript = event.results[0][0].transcript;
+        commandText.textContent = transcript;
+
+        // Send to Flask backend
+        const res = await fetch("/process", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ command: transcript })
+        });
+
+        const data = await res.json();
+        responseText.textContent = data.response;
+
+        // Add to history
+        const li = document.createElement("li");
+        li.innerHTML = `<b>Command:</b> ${data.command}<br><b>Response:</b> ${data.response}`;
+        historyList.prepend(li);
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error", event.error);
+      };
+
+      recognition.onend = () => {
+        recognizing = false;
+        micBtn.textContent = "🎤 Start Speaking";
+      };
+    } else {
+      alert("Sorry, your browser does not support Speech Recognition.");
+    }
+
+    micBtn.addEventListener("click", () => {
+      if (recognition && !recognizing) {
+        recognition.start();
+      }
+    });
+  </script>
 </body>
 </html>

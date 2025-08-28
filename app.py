@@ -1,8 +1,8 @@
-# app.py
+from flask import Flask, render_template, request, jsonify
 from command_processor import CommandProcessor
-import speech_recognition as sr
+from text_to_speech import speak
 
-# Predefined commands and their responses
+# Predefined commands
 COMMANDS = {
     "open youtube": "Opening YouTube...",
     "open google": "Opening Google...",
@@ -14,31 +14,24 @@ COMMANDS = {
     "exit": "Exiting voice command system."
 }
 
-def main():
-    processor = CommandProcessor(COMMANDS)
-    recognizer = sr.Recognizer()
-    mic = sr.Microphone()
+app = Flask(__name__)
+processor = CommandProcessor(COMMANDS)
 
-    while True:
-        print("\nSay a command (or 'exit' to quit):")
-        with mic as source:
-            recognizer.adjust_for_ambient_noise(source)
-            print("Listening...")
-            audio = recognizer.listen(source)
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-        try:
-            command = recognizer.recognize_google(audio)
-            print(f"Recognized: {command}")
-            response = processor.process(command)
-            print(f"Response: {response}")
+@app.route("/process", methods=["POST"])
+def process_command():
+    """Process command sent from browser mic"""
+    data = request.get_json()
+    command = data.get("command", "").lower().strip()
+    response = processor.process(command)
 
-            if command.lower().strip() == "exit":
-                break
+    # ✅ Speak response on server (safe now)
+    speak(response)
 
-        except sr.UnknownValueError:
-            print("Could not understand audio.")
-        except sr.RequestError as e:
-            print(f"Could not request results; {e}")
+    return jsonify({"command": command, "response": response})
 
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)
