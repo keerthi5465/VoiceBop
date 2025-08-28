@@ -2,17 +2,50 @@
 <html>
 <head>
     <title>Voice Search System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        #status {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <h1>Voice Search System</h1>
     <button onclick="startRecording()">Start Voice Input</button>
+    <p id="status"></p>
     <p id="result"></p>
+
     <script>
         function startRecording() {
-            fetch('/voice', {method: 'POST'})
+            const statusEl = document.getElementById('status');
+            const resultEl = document.getElementById('result');
+            statusEl.innerText = "Listening...";
+            resultEl.innerText = "";
+
+            fetch('/voice', { method: 'POST' })
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('result').innerText = data.result;
+                    statusEl.innerText = "Done!";
+                    resultEl.innerText = data.result;
+                })
+                .catch(err => {
+                    statusEl.innerText = "Error during voice processing.";
+                    console.error(err);
                 });
         }
     </script>
